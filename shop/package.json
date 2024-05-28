@@ -1,0 +1,27 @@
+{
+  "name": "shop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "nodemon --inspect src/index.js",
+    "watch": "node-sass src/resources/scss/app.scss src/public/css/app.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "express-handlebars": "^7.1.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.3.0",
+    "mongoose-delete": "^1.0.2",
+    "morgan": "^1.10.0",
+    "node-sass": "^9.0.0",
+    "nodemon": "^3.1.0"
+  },
+  "dependencies": {
+    "method-override": "^3.0.0"
+  }
+}

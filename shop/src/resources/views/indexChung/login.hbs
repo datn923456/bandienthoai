@@ -1,0 +1,104 @@
+<form class="mt-4" id="form-login">
+  <div class="mb-3">
+    <label for="username" class="form-label">Username</label>
+    <input type="text" class="form-control" id="username" name="username" aria-describedby="username">
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Password</label>
+    <input type="password" class="form-control" id="password" name="password" aria-describedby="password">
+  </div>
+  Nếu chưa có tài khoản thì bấm vào đây <a href="/register">Register</a> để đăng ký </br>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+    function setCookie(cname, cvalue, exdays) {
+        const d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        let expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    $(document).ready(function () {
+        $("#form-login").submit(function(event){
+            event.preventDefault();
+
+            var username = $("#username").val();
+            var password = $("#password").val();
+
+            if(!username || !password){
+                Swal.fire({
+                    title:"Vui lòng điền đầy đủ thông tin.",
+                    icon: "error",
+                });
+                return;
+            }
+
+            $.ajax({
+                url: "/logined",
+                method: "POST",
+                data: {
+                    username: $('#username').val(),
+                    password: $('#password').val()
+                },
+                success: function(response){
+                    if(response.message == 'admin'){
+                        setCookie('token', response.token, 1);
+                        Swal.fire({
+                            title: "Đăng nhập thành công Admin",
+                            icon: "success",
+                            timer: 500,
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            },
+                            willClose:() =>{
+                                window.location.href = "/admin";
+                            }
+                        })
+                    }else if(response.message == 'user'){
+                        setCookie('token', response.token, 1);
+                        Swal.fire({
+                            title: "Đăng nhập thành công",
+                            icon: "success",
+                            timer: 500,
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            },
+                            willClose:() =>{
+                                window.location.href = "/home";
+                            }
+                        })
+                    }else{
+                        Swal.fire({
+                            title: response.message,
+                            icon: "error",
+                        });
+                    }
+                },
+                error: function(){
+                    alert("Đã xảy ra lỗi trong quá trình đăng nhập !");
+                }
+            });
+        });
+    });
+</script>

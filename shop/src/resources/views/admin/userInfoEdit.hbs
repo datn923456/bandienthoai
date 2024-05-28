@@ -1,0 +1,29 @@
+<button type="button" class="btn btn-primary">
+    <a href="/admin/users" style="color: white;">
+        Quay về
+    </a>
+</button>
+<form class="mt-4" method="POST" action="/admin/users/{{user._id}}/edited?_method=PUT">
+  <div class="mb-3">
+    <label for="username" class="form-label">Username</label>
+    <input type="text" class="form-control" id="username" name="username" aria-describedby="username" value="{{user.username}}">
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Password</label>
+    <input type="text" class="form-control" id="password" name="password" aria-describedby="password" value="{{user.password}}">
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="text" class="form-control" id="email" name="email" aria-describedby="email" value="{{user.email}}">
+  </div>
+  <div class="mb-3">
+    <label for="sdt" class="form-label">Số điện thoại</label>
+    <input type="number" class="form-control" id="sdt" name="sdt" aria-describedby="sdt" value="{{user.sdt}}">
+  </div>
+  <div class="mb-3">
+    <label for="role" class="form-label">Role</label>
+    <input type="text" class="form-control" id="role" name="role" aria-describedby="role" value="{{user.role}}">
+  </div>
+  
+  <button type="submit" class="btn btn-success">Sửa</button>
+</form>

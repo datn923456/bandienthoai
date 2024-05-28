@@ -1,0 +1,84 @@
+<div class="row">
+    <div class="col-lg-6">
+        <img src="{{dienthoai.image}}" width="300px" height="300px">
+    </div>
+    <div class="col-lg-6">
+        <h1>{{dienthoai.name}}</h1>
+        
+        <form id="addOrder">
+            <label for="quantity">Nhập số lượng:</label>
+            <input type="number" id="quantity" name="quantity" min="1" max="100"></br></br>
+            <button type="submit" class="btn btn-success">Thêm vào giỏ hàng</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {{dienthoai.Info}}
+</div>
+
+<script>
+    $(document).ready(function (){
+        $("#addOrder").submit(function(event){
+            event.preventDefault();
+
+            var quantity = $("#quantity").val();
+
+            if(!quantity){
+                Swal.fire({
+                    title: "Vui lòng điền số lượng",
+                    icon: "error",
+                });
+                return;
+            }
+
+            const idPhone = "{{dienthoai._id}}"
+            $.ajax({
+                url: `/order/${idPhone}`,
+                method: "POST",
+                data: {
+                    quantity: $("#quantity").val(),
+                },
+                success: function(response){
+                    if(response.message == 'Thêm thành công'){
+                        Swal.fire({
+                            title: response.message,
+                            icon: "success",
+                            timer: 200,
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            },
+                            willClose:() =>{
+                                window.location.href = "/home";
+                            }
+                        })
+                    }else if(response.message == 'Cập nhật thành công'){
+                        Swal.fire({
+                            title: response.message,
+                            icon: "success",
+                            timer: 200,
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            },
+                            willClose:() =>{
+                                window.location.href = "/home";
+                            }
+                        })
+                    }else{
+                        Swal.fire({
+                            title: response.message,
+                            icon: "error",
+                        });
+                    }
+                },
+                error: function(){
+                    alert("Đã xảy ra lỗi trong quá trình đăng nhập !");
+                }
+            });
+        })
+    })
+</script>

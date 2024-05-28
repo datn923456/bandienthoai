@@ -1,0 +1,177 @@
+<button type="button" class="btn btn-primary">
+    <a href="/home" style="color: white;">
+        Quay về
+    </a>
+</button>
+<form>
+    <table class="table mt-4">
+        <thread>
+            <tr>
+                <th scope="col" style="align-items: center;">STT</th>
+                <th scope="col" style="align-items: center;">Tên điện thoại</th>
+                <th scope="col" style="align-items: center;">Ảnh</th>
+                <th scope="col" style="align-items: center;">Giá</th>
+                <th scope="col" style="align-items: center;">Số lượng</th>
+                <th scope="col" style="align-items: center;">Sửa</th>
+                <th scope="col" style="align-items: center;">Xóa</th>
+            </tr>
+        </thread>
+        <tbody>
+            {{#each giohang}}
+            <tr>
+                <td style="align-items: center;">{{sum @index 1}}</td>
+                <td style="align-items: center;">{{this.name}}</td>
+                <td style="align-items: center;">
+                    <img src="{{this.image}}" width="100px" height="100px">
+                    
+                    </td>
+                <td style="align-items: center;">{{this.price}}</td>
+                <td style="align-items: center;"><span class="quantity">{{this.quantity}}</span>
+                <input type="number" class="form-control quantity-input" style="display: none;">
+                </td>
+                <td style="align-items: center;">
+                    <button type="button" class="btn btn-success edit-btn">Sửa</button>
+                    <button type="button" class="btn btn-success update-btn" data-id="{{this._id}}" style="display: none;">Cập nhật</button>
+                </td>
+                <td style="align-items: center;">
+                    <button type="button" class="btn btn-danger delete-btn" data-id="{{this._id}}">Xóa</button>
+                    
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+        <thread>
+            <tr>
+                <th scope="col" style="align-items: center;">Tổng tiền</th>
+                <th scope="col" style="align-items: center;">{{tong}}</th>
+                <td colspan="5" style="text-align: right;">
+                    <button type="button" class="btn btn-success">Đặt hàng</button>
+                </td>
+            </tr>
+        </thread>
+    </table>
+</form>
+
+<script>
+$(document).ready(function(){
+    //Sửa
+    $('.edit-btn').click(function() {
+        var row = $(this).closest('tr');
+        row.find('.quantity').hide();
+        row.find('.quantity-input').show();
+        $(this).hide();
+        row.find('.update-btn').show();
+    });
+
+    //Cập nhật
+    $('.update-btn').click(function() {
+        var row = $(this).closest('tr');
+        var productId = $(this).data('id');
+        var newQuantity = row.find('.quantity-input').val();
+
+        if(newQuantity && newQuantity.trim() !== ''){
+            if(parseInt(newQuantity) === 0)
+            {
+                Swal.fire({
+                    title: "Bạn có chắc chắn muốn xóa không",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Chắc chắn",
+                    cancelButtonText: "Không"
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteProduct(productId);
+                    }
+                    });
+            } else {
+                $.ajax({
+                    url: `/update-order/${productId}`,
+                    method: "POST",
+                    data: {
+                        productId: productId,
+                        quantity: newQuantity
+                    },
+                    success: function(response){
+                        if(response.message == 'Cập nhật thành công'){
+                            Swal.fire({
+                                title: response.message,
+                                icon: "success",
+                                timer: 200,
+                                showConfirmButton: false,
+                                timerProgressBar: true,
+                                didOpen: ()=>{
+                                    Swal.showLoading();
+                                },
+                                willClose:() =>{
+                                    window.location.href = "/order";
+                                }
+                            })
+                        }
+                    },
+                    error: function(){
+                        alert("Đã xảy ra lỗi trong quá trình đăng nhập !");
+                    }
+                });
+
+            }
+            row.find('.quantity-input').hide();
+            row.find('.quantity').show();
+            $(this).hide();
+            row.find('.edit-btn').show();
+        } else{
+            Swal.fire({
+                    title: "Vui lòng điền số lượng",
+                    icon: "error",
+                });
+        }
+    });
+
+    //xóa
+    $('.delete-btn').click(function() {
+        var productId = $(this).data('id');
+        Swal.fire({
+            title: "Bạn có chắc chắn muốn xóa không",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Chắc chắn",
+            cancelButtonText: "Không"
+            }).then((result) => {
+            if (result.isConfirmed) {
+                deleteProduct(productId);
+            }
+        });
+    })
+
+
+    function deleteProduct(productId){
+        $.ajax({
+            url: `/delete-order/${productId}`,
+            method: "DELETE",
+            success: function(response){
+                if(response.message == 'Xóa thành công'){
+                    Swal.fire({
+                        title: response.message,
+                        icon: "success",
+                        timer: 200,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                        didOpen: ()=>{
+                            Swal.showLoading();
+                        },
+                        willClose:() =>{
+                            window.location.href = "/order";
+                        }
+                    })
+                }
+            },
+            error: function(){
+                alert("Đã xảy ra lỗi trong quá trình đăng nhập !");
+            }
+        });
+    }
+})
+</script>

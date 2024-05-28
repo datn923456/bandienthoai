@@ -1,0 +1,81 @@
+<form class="mt-4" id="form-register">
+  <div class="mb-3">
+    <label for="username" class="form-label">Username</label>
+    <input type="text" class="form-control" id="username" name="username" aria-describedby="username">
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Password</label>
+    <input type="password" class="form-control" id="password" name="password" aria-describedby="password">
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email address</label>
+    <input type="email" class="form-control" id="email" name="email" aria-describedby="email">
+  </div>
+  <div class="mb-3">
+    <label for="sdt" class="form-label">Số điện thoại</label>
+    <input type="number" class="form-control" id="sdt" name="sdt">
+  </div>
+  Nếu đã có tài khoản thì bấm vào đây <a href="/login">Login</a> để đăng nhập </br>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+  $(document).ready(function () {
+        $("#form-register").submit(function(event){
+            event.preventDefault();
+
+            var username = $("#username").val();
+            var password = $("#password").val();
+            var email = $("#email").val();
+            var sdt = $("#sdt").val();
+
+            if(!username || !password || !email || !sdt){
+                Swal.fire({
+                    title:"Vui lòng điền đầy đủ thông tin.",
+                    icon: "error",
+                });
+                return;
+            }
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(!emailRegex.test(email)){
+              Swal.fire({
+                    title:"Định dạng email không đúng.",
+                    icon: "error",
+                });
+                return;
+            }
+
+            $.ajax({
+                url: "/created",
+                method: "POST",
+                data: {
+                    username: $('#username').val(),
+                    password: $('#password').val(),
+                    email: $('#email').val(),
+                    sdt: $('#sdt').val()
+                },
+                success: function(response){
+                    if(response.message == 'Đăng ký thành công'){
+                        Swal.fire({
+                            title: response.message,
+                            icon: "success",
+                            text: "Bấm để chuyển sang trang đăng nhập",
+                        }).then((result) =>{
+                          if(result.isConfirmed){
+                            window.location.href = "/login";
+                          }
+                        })
+                    }else{
+                        Swal.fire({
+                            title: response.message,
+                            icon: "error",
+                        });
+                    }
+                },
+                error: function(){
+                    alert("Đã xảy ra lỗi trong quá trình đăng nhập !");
+                }
+            });
+        });
+    });
+</script>

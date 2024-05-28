@@ -1,0 +1,76 @@
+<button type="button" class="btn btn-primary">
+    <a href="/admin" style="color: white;">
+        Quay về
+    </a>
+</button>
+<form class="mt-4" id="form-addinfo">
+  <div class="mb-3">
+    <label for="name" class="form-label">Tên điện thoại</label>
+    <input type="text" class="form-control" id="name" name="name" aria-describedby="name">
+  </div>
+  <div class="mb-3">
+    <label for="image" class="form-label">image</label>
+    <input type="text" class="form-control" id="image" name="image" aria-describedby="image">
+  </div>
+  <div class="mb-3">
+    <label for="price" class="form-label">Giá</label>
+    <input type="number" class="form-control" id="price" name="price" aria-describedby="price">
+  </div>
+  <div class="mb-3">
+    <label for="Info" class="form-label">Info</label>
+    <textarea type="text" class="form-control" id="Info" name="Info"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+  $(document).ready(function () {
+        $("#form-addinfo").submit(function(event){
+            event.preventDefault();
+
+            var name = $("#name").val();
+            var image = $("#image").val();
+            var price = $("#price").val();
+            var Info = $("#Info").val();
+
+            if(!name || !image || !price || !Info){
+                Swal.fire({
+                    title:"Vui lòng điền đầy đủ thông tin.",
+                    icon: "error",
+                });
+                return;
+            }
+
+            $.ajax({
+                url: "/admin/added",
+                method: "POST",
+                data: {
+                    name: $('#name').val(),
+                    image: $('#image').val(),
+                    price: $('#price').val(),
+                    Info: $('#Info').val()
+                },
+                success: function(response){
+                    if(response.message == 'Thêm thành công'){
+                        Swal.fire({
+                            title: response.message,
+                            icon: "success",
+                        }).then((result) =>{
+                          if(result.isConfirmed){
+                            window.location.href = "/admin/addinfo";
+                          }
+                        })
+                    }else{
+                        Swal.fire({
+                            title: response.message,
+                            icon: "error",
+                        });
+                    }
+                },
+                error: function(){
+                    alert("Đã xảy ra lỗi trong quá trình thêm");
+                }
+            });
+        });
+    });
+</script>

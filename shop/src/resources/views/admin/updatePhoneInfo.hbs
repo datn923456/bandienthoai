@@ -1,0 +1,26 @@
+<button type="button" class="btn btn-primary">
+    <a href="/admin/update-phone" style="color: white;">
+        Quay về
+    </a>
+</button>
+
+<form class="mt-4" method="POST" action="/admin/{{dienthoai._id}}?_method=PUT">
+  <div class="mb-3">
+    <label for="name" class="form-label">Tên điện thoại</label>
+    <input type="text" class="form-control" id="name" name="name" aria-describedby="name" value="{{dienthoai.name}}">
+  </div>
+  <img src="{{dienthoai.image}}" width="200px" height="200px">
+  <div class="mb-3">
+    <label for="image" class="form-label">image</label>
+    <input type="text" class="form-control" id="image" name="image" aria-describedby="image" value="{{dienthoai.image}}">
+  </div>
+  <div class="mb-3">
+    <label for="price" class="form-label">Giá</label>
+    <input type="number" class="form-control" id="price" name="price" aria-describedby="price" value="{{dienthoai.price}}">
+  </div>
+  <div class="mb-3">
+    <label for="Info" class="form-label">Info</label>
+    <textarea type="text" class="form-control" id="Info" name="Info">{{dienthoai.Info}}</textarea>
+  </div>
+  <button type="submit" class="btn btn-success">Sửa</button>
+</form>

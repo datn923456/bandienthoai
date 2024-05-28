@@ -1,0 +1,40 @@
+<button type="button" class="btn btn-primary">
+    <a href="/admin" style="color: white;">
+        Quay về
+    </a>
+</button>
+<form>
+    <table class="table mt-4">
+        <thread>
+            <tr>
+                <th scope="col" style="align-items: center;">STT</th>
+                <th scope="col" style="align-items: center;">username</th>
+                <th scope="col" style="align-items: center;">Email</th>
+                <th scope="col" style="align-items: center;">Role</th>
+                <th scope="col" style="align-items: center;">Ngày Tạo</th>
+                <th scope="col" style="align-items: center;">Sửa</th>
+                <th scope="col" style="align-items: center;">Xóa</th>
+            </tr>
+        </thread>
+        <tbody>
+            {{#each user}}
+            <tr>
+                <td style="align-items: center;">{{sum @index 1}}</td>
+                <td style="align-items: center;">{{this.username}}</td>
+                <td style="align-items: center;">{{this.email}}</td>
+                <td style="align-items: center;">{{this.role}}</td>
+                <td style="align-items: center;">{{this.createdAt}}</td>
+                <td style="align-items: center;">
+                    <button type="button" class="btn btn-success"><a href="/admin/users/{{this._id}}/edit" style="color: white;"><span>Sửa</span></a></button>
+                    
+                </td>
+                <td style="align-items: center;">
+                    <button type="button" class="btn btn-danger"><a href="/admin/users/{{this._id}}/delete" style="color: white;"><span>Xóa</span></a></button>
+                    
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</form>
+
